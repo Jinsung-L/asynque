@@ -1,5 +1,7 @@
 const { AsynQue, Task } = require('./asynque');
 
+const delay = ms => new Promise(resolve => setTimeout(() => resolve(), ms));
+
 describe('AsynQue', () => {
   describe('getIndexToInsert', () => {
     it('should return target position to insert new task', () => {
@@ -23,52 +25,70 @@ describe('AsynQue', () => {
   describe('queue', () => {
     it('should be able to enque following priority', () => {
       const tasks = [
-        new Task({ priority: 0, value: 1 }),
-        new Task({ priority: 3, value: 3 }),
-        new Task({ priority: 3, value: 4 }),
-        new Task({ priority: -3, value: 0 }),
-        new Task({ priority: 0, value: 2 }),
+        new Task({ priority: 0, task: 1 }),
+        new Task({ priority: 3, task: 3 }),
+        new Task({ priority: 3, task: 4 }),
+        new Task({ priority: -3, task: 0 }),
+        new Task({ priority: 0, task: 2 }),
       ];
 
       const queueAfter = [
-        new Task({ priority: -3, value: 0 }),
-        new Task({ priority: 0, value: 1 }),
-        new Task({ priority: 0, value: 2 }),
-        new Task({ priority: 3, value: 3 }),
-        new Task({ priority: 3, value: 4 }),
+        new Task({ priority: -3, task: 0 }),
+        new Task({ priority: 0, task: 1 }),
+        new Task({ priority: 0, task: 2 }),
+        new Task({ priority: 3, task: 3 }),
+        new Task({ priority: 3, task: 4 }),
       ];
 
       const queue = new AsynQue();
       tasks.forEach(task => queue.enque(task));
 
-      expect(queue.queue).toStrictEqual(queueAfter);
+      expect(queue.queue.map(task => task.task)).toStrictEqual(queueAfter.map(task => task.task));
     });
 
     it('should be able to deque following priority', () => {
       const tasks = [
-        new Task({ priority: 0, value: 1 }),
-        new Task({ priority: 3, value: 3 }),
-        new Task({ priority: 3, value: 4 }),
-        new Task({ priority: -3, value: 0 }),
-        new Task({ priority: 0, value: 2 }),
+        new Task({ priority: 0, task: 1 }),
+        new Task({ priority: 3, task: 3 }),
+        new Task({ priority: 3, task: 4 }),
+        new Task({ priority: -3, task: 0 }),
+        new Task({ priority: 0, task: 2 }),
       ];
 
       const queueAfter = [
-        new Task({ priority: -3, value: 0 }),
-        new Task({ priority: 0, value: 1 }),
-        new Task({ priority: 0, value: 2 }),
-        new Task({ priority: 3, value: 3 }),
-        new Task({ priority: 3, value: 4 }),
+        new Task({ priority: -3, task: 0 }),
+        new Task({ priority: 0, task: 1 }),
+        new Task({ priority: 0, task: 2 }),
+        new Task({ priority: 3, task: 3 }),
+        new Task({ priority: 3, task: 4 }),
       ];
 
       const queue = new AsynQue();
       tasks.forEach(task => queue.enque(task));
 
-      expect(queue.deque()).toStrictEqual(queueAfter[0]);
-      expect(queue.deque()).toStrictEqual(queueAfter[1]);
-      expect(queue.deque()).toStrictEqual(queueAfter[2]);
-      expect(queue.deque()).toStrictEqual(queueAfter[3]);
-      expect(queue.deque()).toStrictEqual(queueAfter[4]);
+      expect(queue.deque().task).toStrictEqual(queueAfter[0].task);
+      expect(queue.deque().task).toStrictEqual(queueAfter[1].task);
+      expect(queue.deque().task).toStrictEqual(queueAfter[2].task);
+      expect(queue.deque().task).toStrictEqual(queueAfter[3].task);
+      expect(queue.deque().task).toStrictEqual(queueAfter[4].task);
+    });
+  });
+
+  describe('enque', () => {
+    it('should return a promise that resolves when the task is done', () => {
+      const queue = new AsynQue();
+
+      const promise = queue.enque(new Task({
+        priority: 0,
+        task: () => 'Hello, world!',
+      }));
+
+      delay(500).then(() => {
+        const task = queue.deque();
+        task.resolve('Hello, world!');
+      });
+
+      return expect(promise).resolves.toBe('Hello, world!');
     });
   });
 });

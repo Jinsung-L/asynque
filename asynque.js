@@ -2,6 +2,7 @@ class Task {
   constructor({ task, priority }) {
     this.task = task;
     this.priority = priority;
+    this.resolve = undefined;
   }
 }
 
@@ -42,6 +43,10 @@ class AsynQue {
     const task = new Task(props);
     const index = this.getIndexToInsert(task.priority);
     this.queue.splice(index, 0, task);
+
+    return new Promise((resolve) => {
+      task.resolve = resolve;
+    });
   }
 
   deque() {
