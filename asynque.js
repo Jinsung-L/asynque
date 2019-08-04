@@ -1,8 +1,14 @@
 class Task {
-  constructor({ task, priority }) {
+  constructor({ task, priority } = { priority: 0 }) {
     this.task = task;
     this.priority = priority;
     this.resolve = undefined;
+  }
+
+  run(...args) {
+    const result = this.task(...args);
+    this.resolve(result);
+    return result;
   }
 }
 

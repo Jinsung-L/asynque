@@ -85,7 +85,7 @@ describe('AsynQue', () => {
 
       delay(500).then(() => {
         const task = queue.deque();
-        task.resolve('Hello, world!');
+        task.run();
       });
 
       return expect(promise).resolves.toBe('Hello, world!');
