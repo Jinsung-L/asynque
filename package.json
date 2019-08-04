@@ -1,0 +1,31 @@
+{
+  "name": "asynque",
+  "version": "1.0.0",
+  "description": "Simple queue handling asynchronous tasks.",
+  "main": "asynque.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jinsung-L/asynque.git"
+  },
+  "keywords": [
+    "queue"
+  ],
+  "author": "Jinsung Lim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jinsung-L/asynque/issues"
+  },
+  "homepage": "https://github.com/Jinsung-L/asynque#readme",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2",
+    "jest": "^24.8.0"
+  },
+  "dependencies": {
+    "tinyqueue": "^2.0.3"
+  }
+}
