@@ -3,12 +3,18 @@ class Task {
     this.task = task;
     this.priority = priority;
     this.resolve = undefined;
+    this.reject = undefined;
   }
 
   run(...args) {
-    const result = this.task(...args);
-    this.resolve(result);
-    return result;
+    try {
+      const result = this.task(...args);
+      this.resolve(result);
+      return result;
+    } catch (error) {
+      this.reject(error);
+      throw error;
+    }
   }
 }
 
@@ -50,8 +56,9 @@ class AsynQue {
     const index = this.getIndexToInsert(task.priority);
     this.queue.splice(index, 0, task);
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       task.resolve = resolve;
+      task.reject = reject;
     });
   }
 

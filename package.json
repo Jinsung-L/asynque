@@ -11,7 +11,9 @@
     "url": "git+https://github.com/Jinsung-L/asynque.git"
   },
   "keywords": [
-    "queue"
+    "queue",
+    "async",
+    "asynchronous"
   ],
   "author": "Jinsung Lim",
   "license": "MIT",

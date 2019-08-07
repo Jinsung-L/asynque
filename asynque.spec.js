@@ -75,20 +75,32 @@ describe('AsynQue', () => {
   });
 
   describe('enque', () => {
-    it('should return a promise that resolves when the task is done', () => {
+    it('should return a promise that resolves when the task is done', async () => {
       const queue = new AsynQue();
 
       const promise = queue.enque(new Task({
-        priority: 0,
         task: () => 'Hello, world!',
       }));
 
-      delay(500).then(() => {
-        const task = queue.deque();
-        task.run();
-      });
+      const result = delay(300).then(() => queue.deque().run());
 
-      return expect(promise).resolves.toBe('Hello, world!');
+      await expect(result).resolves.toBe('Hello, world!');
+      await expect(promise).resolves.toBe('Hello, world!');
+    });
+
+    it('should return a promise that rejects when the task fails', async () => {
+      const queue = new AsynQue();
+
+      const promise = queue.enque(new Task({
+        task: () => {
+          throw new Error('Something went wrong!');
+        },
+      }));
+
+      const result = delay(300).then(() => queue.deque().run());
+
+      await expect(result).rejects.toThrow('Something went wrong!');
+      await expect(promise).rejects.toThrow('Something went wrong!');
     });
   });
 });
