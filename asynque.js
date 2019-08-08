@@ -1,7 +1,7 @@
 class Task {
-  constructor({ task, priority } = { priority: 0 }) {
+  constructor({ task, priority }) {
     this.task = task;
-    this.priority = priority;
+    this.priority = priority || 0;
     this.resolve = undefined;
     this.reject = undefined;
   }
