@@ -1,4 +1,6 @@
 # asynque
+[![npm version](https://badge.fury.io/js/asynque.svg)](https://badge.fury.io/js/asynque)
+
 Simple queue handling asynchronous tasks.
 
 # Installation
