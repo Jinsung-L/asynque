@@ -7,11 +7,11 @@ describe('AsynQue', () => {
     it('should return target position to insert new task', () => {
       const queue = new AsynQue({
         tasks: [
-          new Task({ priority: -3, value: 0 }),
-          new Task({ priority: 0, value: 1 }),
-          new Task({ priority: 0, value: 2 }),
-          new Task({ priority: 3, value: 3 }),
-          new Task({ priority: 3, value: 4 }),
+          new Task({ task: () => {}, priority: -3, value: 0 }),
+          new Task({ task: () => {}, priority: 0, value: 1 }),
+          new Task({ task: () => {}, priority: 0, value: 2 }),
+          new Task({ task: () => {}, priority: 3, value: 3 }),
+          new Task({ task: () => {}, priority: 3, value: 4 }),
         ],
       });
 

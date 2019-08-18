@@ -1,9 +1,18 @@
+const mandatory = (name) => {
+  throw new Error(`Missing parameter: ${name}`);
+};
+
 class Task {
-  constructor({ task, priority }) {
+  constructor({
+    task = mandatory('task'),
+    priority = 0,
+  }) {
     this.task = task;
-    this.priority = priority || 0;
-    this.resolve = undefined;
-    this.reject = undefined;
+    this.priority = priority;
+    this.promise = new Promise((resolve, reject) => {
+      this.resolve = resolve;
+      this.reject = reject;
+    });
   }
 
   run(...args) {
@@ -23,7 +32,7 @@ class AsynQue {
     return a.priority - b.priority;
   }
 
-  constructor({ tasks } = { tasks: [] }) {
+  constructor({ tasks = [] } = {}) {
     this.queue = tasks;
   }
 
@@ -56,10 +65,7 @@ class AsynQue {
     const index = this.getIndexToInsert(task.priority);
     this.queue.splice(index, 0, task);
 
-    return new Promise((resolve, reject) => {
-      task.resolve = resolve;
-      task.reject = reject;
-    });
+    return task.promise;
   }
 
   deque() {
