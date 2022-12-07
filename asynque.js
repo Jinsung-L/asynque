@@ -1,80 +1,83 @@
 const mandatory = (name) => {
-  throw new Error(`Missing parameter: ${name}`);
-};
+  throw new Error(`Missing parameter: ${name}`)
+}
 
 class Task {
-  constructor({
-    task = mandatory('task'),
-    priority = 0,
-  }) {
-    this.task = task;
-    this.priority = priority;
+  constructor({ task = mandatory('task'), priority = 0 }) {
+    this.task = task
+    this.priority = priority
     this.promise = new Promise((resolve, reject) => {
-      this.resolve = resolve;
-      this.reject = reject;
-    });
+      this.resolve = resolve
+      this.reject = reject
+    })
   }
 
   run(...args) {
     try {
-      const result = this.task(...args);
-      this.resolve(result);
-      return result;
+      const result = this.task(...args)
+      this.resolve(result)
+      return result
     } catch (error) {
-      this.reject(error);
-      throw error;
+      this.reject(error)
+      throw error
     }
   }
 }
 
 class AsynQue {
   static priorityComparator(a, b) {
-    return a.priority - b.priority;
+    return a.priority - b.priority
   }
 
   constructor({ tasks = [] } = {}) {
-    this.queue = tasks;
+    this.queue = tasks
   }
 
   get length() {
-    return this.queue.length;
+    return this.queue.length
   }
 
   get isEmpty() {
-    return this.queue.length === 0;
+    return this.queue.length === 0
   }
 
   getIndexToInsert(priority) {
-    let lo = 0;
-    let hi = this.length;
+    let lo = 0
+    let hi = this.length
 
     while (lo + 1 < hi) {
-      const mid = Math.floor((lo + hi) / 2);
+      const mid = Math.floor((lo + hi) / 2)
 
-      if (this.queue[mid].priority <= priority) { lo = mid; } else { hi = mid; }
+      if (this.queue[mid].priority <= priority) {
+        lo = mid
+      } else {
+        hi = mid
+      }
     }
 
-    let i = lo;
-    while (i < this.length && this.queue[i].priority <= priority) { i += 1; }
+    let i = lo
+    while (i < this.length && this.queue[i].priority <= priority) {
+      i += 1
+    }
 
-    return i;
+    return i
   }
 
   enque(props) {
-    const task = new Task(props);
-    const index = this.getIndexToInsert(task.priority);
-    this.queue.splice(index, 0, task);
+    const task = new Task(props)
+    const index = this.getIndexToInsert(task.priority)
+    this.queue.splice(index, 0, task)
 
-    return task.promise;
+    return task.promise
   }
 
   deque() {
-    return this.queue.shift();
+    return this.queue.shift()
   }
 
   front() {
-    return this.queue[0];
+    return this.queue[0]
   }
 }
 
-module.exports = { AsynQue, Task };
+module.exports = { AsynQue, Task }
